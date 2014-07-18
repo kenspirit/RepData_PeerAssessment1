@@ -63,6 +63,9 @@ The interval **835** on average contains the maximum number of steps across all 
 
 ## Imputing missing values
 
+```r
+data.missing.rows <- nrow(data.activity) - nrow(data.activity.complete)
+```
 There are **2304** rows having missing values in the dataset.
 
 Let's see if we impute the missing values with the mean of the 5-minute interval, how the histogram and mean/median values might be impacted.
@@ -94,6 +97,11 @@ hist(data.steps.per.day.imputed$Steps,
 ![plot of chunk imputing-na-value](figure/imputing-na-value.png) 
 
 
+```r
+data.steps.mean.imputed <- mean(data.steps.per.day.imputed$Steps)
+
+data.steps.median.imputed <- median(data.steps.per.day.imputed$Steps)
+```
 **Mean** total number of steps per day now is **10766**.
 
 **Median** total number of steps per day now is **10766**.
