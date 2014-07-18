@@ -2,14 +2,16 @@
 
 
 ## Loading and preprocessing the data
-```{r loading-data}
+
+```r
 unzip("activity.zip")
 
 data.activity <- read.csv("activity.csv", header = T, sep = ",")
 ```
 
 ## What is mean total number of steps taken per day?
-```{r total-steps-day}
+
+```r
 data.activity.complete <- data.activity[complete.cases(data.activity),]
 
 GetTotalStepsPerDay <- function(data) {
@@ -24,18 +26,22 @@ hist(data.steps.per.day$Steps, main = "Total number of steps taken per day",
      xlab = "Total number o steps")
 ```
 
-```{r total-steps-day-summary}
+![plot of chunk total-steps-day](figure/total-steps-day.png) 
+
+
+```r
 data.steps.mean <- mean(data.steps.per.day$Steps)
 
 data.steps.median <- median(data.steps.per.day$Steps)
 ```
-**Mean** total number of steps per day is **`r format(data.steps.mean, scientific=F)`**.
+**Mean** total number of steps per day is **10766**.
 
-**Median** total number of steps per day is **`r format(data.steps.median, scientific=F)`**.
+**Median** total number of steps per day is **10765**.
 
 
 ## What is the average daily activity pattern?
-```{r interval-average-step}
+
+```r
 library(ggplot2)
 
 data.steps.avg.interval <- aggregate(data.activity.complete$steps,
@@ -47,18 +53,22 @@ qplot(Interval, Steps, data = data.steps.avg.interval, geom = "line",
     main = "Average Steps per Interval")
 ```
 
-```{r interval-max-steps}
+![plot of chunk interval-average-step](figure/interval-average-step.png) 
+
+
+```r
 data.steps.max.interval <- data.steps.avg.interval[data.steps.avg.interval$Steps == max(data.steps.avg.interval$Steps),1]
 ```
-The interval **`r data.steps.max.interval`** on average contains the maximum number of steps across all days.
+The interval **835** on average contains the maximum number of steps across all days.
 
 ## Imputing missing values
 
-There are **`r nrow(data.activity) - nrow(data.activity.complete)`** rows having missing values in the dataset.
+There are **2304** rows having missing values in the dataset.
 
 Let's see if we impute the missing values with the mean of the 5-minute interval, how the histogram and mean/median values might be impacted.
 
-```{r imputing-na-value}
+
+```r
 # Create a new copy
 data.activity.imputed <- data.activity
 
@@ -81,19 +91,18 @@ hist(data.steps.per.day.imputed$Steps,
      xlab = "Total number of steps")
 ```
 
-```{r total-steps-day-summary-imputed,echo=FALSE}
-data.steps.mean.imputed <- mean(data.steps.per.day.imputed$Steps)
+![plot of chunk imputing-na-value](figure/imputing-na-value.png) 
 
-data.steps.median.imputed <- median(data.steps.per.day.imputed$Steps)
-```
-**Mean** total number of steps per day now is **`r format(data.steps.mean.imputed, scientific=F)`**.
 
-**Median** total number of steps per day now is **`r format(data.steps.median.imputed, scientific=F)`**.
+**Mean** total number of steps per day now is **10766**.
+
+**Median** total number of steps per day now is **10766**.
 
 Based on the re-calculated value, it seems imputing the missing value doesn't affect the mean & median calculated.
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r weekdays-vs-weekends}
+
+```r
 WeekdayCategory <- function(date.string) {
     weekday <- weekdays(as.Date(date.string, "%Y-%m-%d"), abbreviate = T)
     ifelse(weekday == "Sun" | weekday == "Sat", "Weekend", "Weekday")
@@ -110,6 +119,8 @@ names(data.steps.weekday.interval) <- c("Interval", "Weekday", "Steps")
 qplot(Interval, Steps, data = data.steps.weekday.interval, facets = Weekday ~ ., geom = "line",
       main = "Average steps per interval (Weekday vs Weekend)")
 ```
+
+![plot of chunk weekdays-vs-weekends](figure/weekdays-vs-weekends.png) 
 
 As we can observed, the steps patterns reflect normal life as expected.    
 
